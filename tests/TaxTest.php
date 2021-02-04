@@ -1,28 +1,53 @@
 <?php
 use PHPUnit\Framework\TestCase;
-use Src\Country;
-use Src\Tax;
-use Src\EmployeeV1;
+use App\Country;
+use App\Tax;
+use App\EmployeeV1;
 
 final class TaxTest extends TestCase
 {
     public function testGetWageAfterTax(): void
     {
-        $canada = new Country(20);
-        $employee = new EmployeeV1(26, 6000,2, true);
-        $tax = new Tax($employee, $canada);
+        $cases = [
+            [
+                "name" => "Alice",
+                "age" => 26,
+                "kids" => 2,
+                "wage" => 6000,
+                "companyCar" => false,
+                "result" => 4800
+            ],
+            [
+                "name" => "Bob",
+                "age" => 52,
+                "kids" => 0,
+                "wage" => 4000,
+                "companyCar" => true,
+                "result" => 2980
+            ],
+            [
+                "name" => "Charlie",
+                "age" => 36,
+                "kids" => 3,
+                "wage" => 5000,
+                "companyCar" => true,
+                "result" => 3600
+            ]
+        ];
 
-        $tax->countTax();
-        $money = $tax->getWageAfterTax();
-        $this->assertSame(40000, $money);
+        foreach ($cases as $case) {
+            $canada = new Country(20);
+            $employee = new EmployeeV1($case["age"], $case["kids"],$case["wage"], $case["companyCar"]);
+            $tax = new Tax($employee, $canada);
 
+            $tax->countTax();
+            print_r(
+                "\n" . $case["name"] . ",  age:" . $case["age"]. ", wage before tax: ". $case["wage"]
+            );
+            $money = $tax->getWageAfterTax();
 
-//        $stack = [];
-//        array_push($stack, 'foo');
-//        $this->assertSame('foo', $stack[count($stack)-1]);
-//        $this->assertSame(1, count($stack));
-//
-//        $this->assertSame('foo', array_pop($stack));
-//        $this->assertSame(0, count($stack));
+            print_r(", Wage after taxes " . $money);
+            $this->assertSame($case["result"], $money);
+        }
     }
 }

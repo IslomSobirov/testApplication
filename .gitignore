@@ -1,0 +1,4 @@
+.env
+.plan
+vendor
+.phpunit.result.cache
