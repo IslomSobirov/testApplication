@@ -2,3 +2,4 @@
 .plan
 vendor
 .phpunit.result.cache
+.idea
